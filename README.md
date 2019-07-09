@@ -50,9 +50,7 @@ Install the prerequisite packages:
     `$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -`    
     `$ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"` 
     `$ sudo apt update` 
-    `$ sudo apt install docker-ce docker-ce-cli containerd.io
-    `$ curl -fsSL https://get.docker.com -o get-docker.sh`  
-    `$ sudo sh get-docker.sh`  
+    `$ sudo apt install docker-ce docker-ce-cli containerd.io`  
 
 3.  Install Docker-Compose:  
 
