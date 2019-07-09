@@ -46,8 +46,8 @@ Install the prerequisite packages:
     `$ sudo snap remove docker`  
 
 2.  Install Docker CE:  
-    `$ sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-    `$ curl -fsSL https://get.docker.com -o get-docker.sh`  
+    `$ sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common`
+    `$ curl -fsSL https://get.docker.com -o get-docker.sh` 
     `$ sudo sh get-docker.sh`  
 
 3.  Install Docker-Compose:  
