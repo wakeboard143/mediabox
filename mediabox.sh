@@ -86,14 +86,6 @@ read -r -s -p "What is your PIA Password? (Will not be echoed): " piapass
 printf "\\n\\n"
 fi
 
-# Get info needed for PLEX Official image
-read -r -p "Which PLEX release do you want to run? By default 'public' will be used. (latest, public, plexpass): " pmstag
-read -r -p "If you have PLEXPASS what is your Claim Token from https://www.plex.tv/claim/ (Optional): " pmstoken
-# If not set - set PMS Tag to Public:
-if [ -z "$pmstag" ]; then
-   pmstag=public
-fi
-
 # Get the info for the style of Portainer to use
 read -r -p "Which style of Portainer do you want to use? By default 'No Auth' will be used. (noauth, auth): " portainerstyle
 if [ -z "$portainerstyle" ]; then
@@ -144,29 +136,16 @@ if [ -z "$musicdirectory" ]; then
     musicdirectory="$PWD/content/music"
 fi
 
-# Adjust for Container name changes
-[ -d "sickrage/" ] && mv sickrage/ sickchill  # Switch from Sickrage to SickChill
-
-mkdir -p couchpotato
 mkdir -p delugevpn
 mkdir -p delugevpn/config/openvpn
-mkdir -p duplicati
-mkdir -p duplicati/backups
-mkdir -p headphones
 mkdir -p historical/env_files
 mkdir -p jackett
-mkdir -p jellyfin
 mkdir -p lidarr
-mkdir -p minio
 mkdir -p muximux
 mkdir -p nzbget
-mkdir -p ombi
-mkdir -p "plex/Library/Application Support/Plex Media Server/Logs"
 mkdir -p portainer
 mkdir -p radarr
-mkdir -p sickchill
 mkdir -p sonarr
-mkdir -p tautulli
 
 # Create menu - Select and Move the PIA VPN files
 echo "The following PIA Servers are avialable that support port-forwarding (for DelugeVPN); Please select one:"
@@ -223,18 +202,12 @@ echo "PIAUNAME=$piauname"
 echo "PIAPASS=$piapass"
 echo "CIDR_ADDRESS=$lannet"
 echo "TZ=$time_zone"
-echo "PMSTAG=$pmstag"
-echo "PMSTOKEN=$pmstoken"
 echo "PORTAINERSTYLE=$portainerstyle"
 echo "VPN_REMOTE=$vpnremote"
 } >> .env
 echo ".env file creation complete"
 printf "\\n\\n"
 
-# Adjust for the Switch to linuxserver/sickchill
-docker rm -f sickchill > /dev/null 2>&1
-# Adjust for the Tautulli replacement of PlexPy
-docker rm -f plexpy > /dev/null 2>&1
 # Adjust for the Ouroboros replacement of Watchtower
 docker rm -f watchtower > /dev/null 2>&1
 # Adjust for old uhttpd web container - Noted in issue #47
@@ -302,19 +275,6 @@ perl -i -pe "s/locip/$locip/g" muximux/www/muximux/mediaboxconfig.php
 perl -i -pe "s/daemonun/$daemonun/g" muximux/www/muximux/mediaboxconfig.php
 perl -i -pe "s/daemonpass/$daemonpass/g" muximux/www/muximux/mediaboxconfig.php
 docker start muximux > /dev/null 2>&1
-
-# If PlexPy existed - copy plexpy.db to Tautulli
-if [ -e plexpy/plexpy.db ]; then
-    docker stop tautulli > /dev/null 2>&1
-    mv tautulli/tautulli.db tautulli/tautulli.db.orig
-    cp plexpy/plexpy.db tautulli/tautulli.db
-    mv plexpy/plexpy.db plexpy/plexpy.db.moved
-    docker start tautulli > /dev/null 2>&1
-    mv plexpy/ historical/plexpy/
-fi
-if [ -e plexpy/plexpy.db.moved ]; then # Adjust for missed moves
-    mv plexpy/ historical/plexpy/
-fi
 
 printf "Setup Complete - Open a browser and go to: \\n\\n"
 printf "http://%s \\nOR http://%s If you have appropriate DNS configured.\\n\\n" "$locip" "$thishost"
