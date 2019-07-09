@@ -14,25 +14,6 @@ version: '3.5'
 services:
 
     # ----------------------------------------
-    # COUCHPOTATO
-    # ----------------------------------------
-    couchpotato:
-        image: linuxserver/couchpotato
-        container_name: couchpotato
-        restart: unless-stopped
-        network_mode: "bridge"
-        ports:
-            - '${IP_ADDRESS}:5050:5050'
-        environment:
-            - PUID=${PUID}
-            - PGID=${PGID}
-        volumes:
-            - './couchpotato:/config'
-            - '${DLDIR}/completed:/downloads'
-            - '${MOVIEDIR}:/movies'
-            - '/etc/localtime:/etc/localtime:ro'
-
-    # ----------------------------------------
     # DELUGEVPN
     # ----------------------------------------
     arch-delugevpn:
@@ -70,44 +51,6 @@ services:
             - '/etc/localtime:/etc/localtime:ro'
 
     # ----------------------------------------
-    # DUPLICATI
-    # ----------------------------------------
-    duplicati:
-        image: linuxserver/duplicati
-        container_name: duplicati
-        restart: unless-stopped
-        network_mode: "bridge"
-        ports:
-            - '${IP_ADDRESS}:8200:8200'
-        environment:
-            - PUID=${PUID}
-            - PGID=${PGID}
-        volumes:
-            - './duplicati:/config'
-            - './duplicati/backups:/backups'
-            - '${PWD}:/source'
-            - '/etc/localtime:/etc/localtime:ro'
-
-    # ----------------------------------------
-    # HEADPHONES
-    # ----------------------------------------
-    headphones:
-        image: linuxserver/headphones
-        container_name: headphones
-        restart: unless-stopped
-        network_mode: "bridge"
-        ports:
-            - '${IP_ADDRESS}:8282:8181'
-        environment:
-            - PUID=${PUID}
-            - PGID=${PGID}
-            - TZ=${TZ}
-        volumes:
-            - './headphones:/config'
-            - '${DLDIR}/completed:/downloads'
-            - '${MUSICDIR}:/music'
-
-    # ----------------------------------------
     # JACKETT
     # ----------------------------------------
     jackett:
@@ -123,23 +66,6 @@ services:
         volumes:
             - './jackett:/config'
             - '${DLDIR}/completed:/downloads'
-            - '/etc/localtime:/etc/localtime:ro'
-
-    # ----------------------------------------
-    # JELLYFIN
-    # ----------------------------------------
-    jellyfin:
-        image: jellyfin/jellyfin
-        container_name: jellyfin
-        restart: unless-stopped
-        network_mode: "host"
-        user: "${PUID}:${PGID}"
-        ports:
-            - '${IP_ADDRESS}:8096:8096'
-        volumes:
-            - './jellyfin:/config'
-            - '${TVDIR}:/media/tv'
-            - '${MOVIEDIR}:/media/movies'
             - '/etc/localtime:/etc/localtime:ro'
 
     # ----------------------------------------
@@ -160,24 +86,6 @@ services:
             - '${DLDIR}/completed:/data/completed'
             - '${MUSICDIR}:/music'
             - '/etc/localtime:/etc/localtime:ro'
-
-    # ----------------------------------------
-    # MINIO
-    # ----------------------------------------
-    minio:
-        image: minio/minio
-        container_name: minio
-        restart: unless-stopped
-        network_mode: "bridge"
-        ports:
-            - '${IP_ADDRESS}:9009:9000'
-        environment:
-            - MINIO_ACCESS_KEY=minio
-            - MINIO_SECRET_KEY=minio123
-        volumes:
-            - './minio:/root/.minio'
-            - '${PWD}:/export'
-        command: server /export
 
     # ----------------------------------------
     # MUXIMUX
@@ -237,23 +145,6 @@ services:
           - '${DLDIR}:/downloads'
 
     # ----------------------------------------
-    # OMBI
-    # ----------------------------------------
-    ombi:
-        image: linuxserver/ombi
-        container_name: ombi
-        restart: unless-stopped
-        network_mode: "bridge"
-        ports:
-            - '${IP_ADDRESS}:3579:3579'
-        environment:
-            - PUID=${PUID}
-            - PGID=${PGID}
-        volumes:
-            - './ombi:/config'
-            - '/etc/localtime:/etc/localtime:ro'
-
-    # ----------------------------------------
     # OUROBOROS
     # ----------------------------------------
     ouroboros:
@@ -270,39 +161,6 @@ services:
             - TZ=${TZ}
         volumes:
             - '/var/run/docker.sock:/var/run/docker.sock'
-
-    # ----------------------------------------
-    # PLEX
-    # ----------------------------------------
-    plex:
-        container_name: plex
-        image: plexinc/pms-docker:${PMSTAG}
-        restart: unless-stopped
-        network_mode: "host"
-        ports:
-            - '${IP_ADDRESS}:32400:32400/tcp'
-            - '${IP_ADDRESS}:3005:3005/tcp'
-            - '${IP_ADDRESS}:8324:8324/tcp'
-            - '${IP_ADDRESS}:32469:32469/tcp'
-            - '${IP_ADDRESS}:1900:1900/udp'
-            - '${IP_ADDRESS}:32410:32410/udp'
-            - '${IP_ADDRESS}:32412:32412/udp'
-            - '${IP_ADDRESS}:32413:32413/udp'
-            - '${IP_ADDRESS}:32414:32414/udp'
-        environment:
-            - PLEX_CLAIM=${PMSTOKEN}
-            - ADVERTISE_IP=http://${IP_ADDRESS}:32400/
-            - ALLOWED_NETWORKS=${CIDR_ADDRESS}
-            - PLEX_UID=${PUID}
-            - PLEX_GID=${PGID}
-        hostname: ${HOSTNAME}
-        volumes:
-            - './plex:/config'
-            - './plex/transcode:/transcode'
-            - '${TVDIR}:/data/tvshows'
-            - '${MOVIEDIR}:/data/movies'
-            - '${MUSICDIR}:/data/music'
-            - '/etc/localtime:/etc/localtime:ro'
 
     # ----------------------------------------
     # PORTAINER
@@ -343,25 +201,6 @@ services:
             - '/etc/localtime:/etc/localtime:ro'
 
     # ----------------------------------------
-    # SICKCHILL
-    # ----------------------------------------
-    sickchill:
-        image: linuxserver/sickchill
-        container_name: sickchill
-        restart: unless-stopped
-        network_mode: "bridge"
-        ports:
-            - '${IP_ADDRESS}:8081:8081'
-        environment:
-            - PUID=${PUID}
-            - PGID=${PGID}
-        volumes:
-            - './sickchill:/config'
-            - '${DLDIR}/completed:/downloads'
-            - '${TVDIR}:/tv'
-            - '/etc/localtime:/etc/localtime:ro'
-
-    # ----------------------------------------
     # SONARR
     # ----------------------------------------
     sonarr:
@@ -380,23 +219,3 @@ services:
             - '${DLDIR}/completed:/data/completed'
             - '${TVDIR}:/tv'
             - '/etc/localtime:/etc/localtime:ro'
-
-    # ----------------------------------------
-    # TAUTULLI
-    # ----------------------------------------
-    tautulli:
-        image: tautulli/tautulli
-        container_name: tautulli
-        restart: unless-stopped
-        network_mode: "bridge"
-        ports:
-            - '${IP_ADDRESS}:8181:8181'
-        environment:
-            - PUID=${PUID}
-            - PGID=${PGID}
-            - TZ=${TZ}
-        volumes:
-            - './tautulli:/config'
-            - './plex/Library/Application Support/Plex Media Server/Logs:/logs:ro'
-        depends_on:
-            - plex
